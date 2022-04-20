@@ -1,0 +1,5 @@
+.coverage
+.coveragerc
+htmlcov
+.idea
+db.sqlite3
