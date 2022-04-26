@@ -168,6 +168,7 @@ cython_debug/
 
 authentication/migrations
 authentication/tests
+*/migrations
 .coverage
 .coveragerc
 htmlcov
