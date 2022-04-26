@@ -3,7 +3,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from authentication.serializers import RegisterSerializer, LogInSerializer
 from rest_framework import response, status
 from rest_framework.permissions import AllowAny
-from rest_framework.authentication import BaseAuthentication
 
 
 class RegisterAPIView(GenericAPIView):
@@ -20,7 +19,3 @@ class RegisterAPIView(GenericAPIView):
 
 class LoginAPIView(TokenObtainPairView):
     serializer_class = LogInSerializer
-
-
-class UserViewAPI(BaseAuthentication):
-    ...
