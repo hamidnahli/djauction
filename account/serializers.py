@@ -1,6 +1,7 @@
+from django.contrib.auth.password_validation import validate_password
+
 from authentication.models import User
 from rest_framework import serializers
-from django.utils.translation import gettext_lazy as _
 
 
 class RetrieveUserProfileSerializer(serializers.ModelSerializer):
@@ -22,28 +23,30 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
             'office_phone', 'company',)
 
 
-class UserPasswordChangeSerializer(serializers.Serializer):
-    password = serializers.CharField(required=True, max_length=30)
-    password1 = serializers.CharField(required=True, max_length=30)
-    password2 = serializers.CharField(required=True, max_length=30)
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    old_password = serializers.CharField(write_only=True, required=True)
 
-    def validate(self, data):
-        if not self.context['request'].user.check_password(data.get('password')):
-            raise serializers.ValidationError({'old_password': 'Wrong password.'})
-        if data.get('password1') != data.get('password2'):
-            raise serializers.ValidationError({'password': 'Password must be confirmed correctly.'})
-        return data
+    class Meta:
+        model = User
+        fields = ('old_password', 'password', 'password2')
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "Old password is not correct"})
+        return value
 
     def update(self, instance, validated_data):
-        print(instance, type(instance))
-        print(validated_data['password1'])
-        instance.set_password(validated_data['password1'])
+
+        instance.set_password(validated_data['password'])
         instance.save()
+
         return instance
-
-    def create(self, validated_data):
-        pass
-
-    # @property
-    # def data(self):
-    #     return {'Success': True}

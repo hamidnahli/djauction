@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import UpdateAPIView
 from authentication.models import User
-from account.serializers import RetrieveUserProfileSerializer, UpdateUserProfileSerializer, UserPasswordChangeSerializer
+from account.serializers import RetrieveUserProfileSerializer, UpdateUserProfileSerializer, ChangePasswordSerializer
 
 
 class RetrieveUserProfile(viewsets.ModelViewSet):
@@ -26,15 +26,11 @@ class UpdateUserProfile(UpdateAPIView):
         return User.objects.filter(pk=self.request.user.pk)
 
 
-class APIChangePasswordView(UpdateAPIView):
+class ChangePasswordView(UpdateAPIView):
     lookup_field = 'pk'
     lookup_url_kwarg = 'user_id'
-    serializer_class = UserPasswordChangeSerializer
-    model = get_user_model()
     permission_classes = (IsAuthenticated,)
-
-    def get_object(self, queryset=None):
-        return self.request.user
+    serializer_class = ChangePasswordSerializer
 
     def get_queryset(self):
         return User.objects.filter(pk=self.request.user.pk)
