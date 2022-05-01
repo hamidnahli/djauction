@@ -171,7 +171,6 @@ authentication/tests
 marketplace/migrations
 account/migrations
 auction/migrations
-marketplace/migrations
 */migrations
 .git_backup
 
