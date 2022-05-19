@@ -30,4 +30,4 @@ class Image(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.image_url
+        return self.product_id

@@ -181,3 +181,4 @@ htmlcov
 db.sqlite3
 .env
 .DS_Store
+API.py
